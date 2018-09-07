@@ -138,6 +138,33 @@ routes.post('/upload-user-profile-image/:authToken/:_id', upload.single('profile
   }
 
 });
+routes.post('/upload-user-education-document', upload.single('educational_document'), function(req, res){
+  try{
+    var clientData = req.body;
+    console.log(clientData._id);
+    if (!req.file) {
+      console.log("No file received");
+      return res.json({statusCode:404, statusMessage: "File not received"});
+    }
+    else
+    {
+      userController.uploadEducationalDocuments(clientData, req.file, function (err, data) {
+        if (err){
+          return res.json({statusCode:500, statusMessage:"Cannot save image", error: err});
+        }
+        else{
+          console.log(data);
+          return res.json(data);
+        }
+      });
+    }
+
+  }
+  catch(err){
+    return res.json({statusCode:500, statusMessage:"Cannot save image", error: err});
+  }
+
+});
 routes.use(RSTAuthenticationService());
 routes.post('/active-users-list', function(req, res){
   try{
@@ -421,7 +448,14 @@ routes.post('/get-user-bgc-employment-details', function(req,res){
         if (err) return res.json(err);
         else {
           if(data && data.employmentList){
-            return res.json({data : data.employmentList ,statusCode: 200, statusMessage: "OK"});
+            var responseData = {};
+            responseData.data = data.employmentList;
+            responseData.isExperienced = data.isExperienced;
+            responseData.canVerifyIn15Days = data.canVerifyIn15Days;
+            responseData.dateForVerification = data.dateForVerification;
+            responseData.statusCode = 200;
+            responseData.statusMessage = "OK";
+            return res.json(responseData);
           }
           else
           {
@@ -443,7 +477,10 @@ routes.post('/update-user-bgc-employment-details', function(req,res){
   try{
     var clientData = req.body;
     console.log(clientData);
-    JSONValidatorService.jsonValidationWithSchema(req, res, jsonSchema.emp_user.updateEmploymentDetails, clientData.educationQualification, function (err, data) {
+    if(!clientData.isExperienced){
+      clientData.employmentList = [];
+    }
+    JSONValidatorService.jsonValidationWithSchema(req, res, jsonSchema.emp_user.updateEmploymentDetails, clientData, function (err, data) {
       if(data){
         Bgc.findByIdAndUpdate({_id: clientData.bgcId},
             {
@@ -468,7 +505,151 @@ routes.post('/update-user-bgc-employment-details', function(req,res){
     res.json(err)
   }
 });
-
+routes.post('/get-user-bgc-reference-details', function(req,res){
+  try{
+    var clientData = req.body;
+    console.log(clientData);
+    if(clientData.bgcId){
+      Bgc.findOne({_id: clientData.bgcId}, function (err, data) {
+        if (err) return res.json(err);
+        else {
+          if(data && data.referenceList){
+            var responseData = {};
+            responseData.data = data.referenceList;
+            responseData.statusCode = 200;
+            responseData.statusMessage = "OK";
+            return res.json(responseData);
+          }
+          else
+          {
+            return res.json({statusCode: 402, statusMessage: "Please update basic profile first...!!!"});
+          }
+        }
+      })
+    }
+    else
+    {
+      res.json({statusCode: 402, statusMessage: "Something bad happened...!!!"});
+    }
+  }
+  catch(err){
+    res.json(err)
+  }
+});
+routes.post('/update-user-bgc-reference-details', function(req,res){
+  try{
+    var clientData = req.body;
+    console.log(clientData);
+    JSONValidatorService.jsonValidationWithSchema(req, res, jsonSchema.emp_user.updateReferenceDetails, clientData.referenceList, function (err, data) {
+      if(data){
+        Bgc.findByIdAndUpdate({_id: clientData.bgcId},
+            {
+              referenceList : clientData.referenceList
+            }, function (err, data) {
+              if (err) return res.json(err);
+              else {
+                return res.json({statusCode: 200, statusMessage: "updated successfully."});
+              }
+            })
+      }
+      else
+      {
+        res.json({err: err});
+      }
+    });
+  }
+  catch(err){
+    res.json(err)
+  }
+});
+routes.post('/get-user-bgc-identity-details', function(req,res){
+  try{
+    var clientData = req.body;
+    console.log(clientData);
+    if(clientData.bgcId){
+      Bgc.findOne({_id: clientData.bgcId}, function (err, data) {
+        if (err) return res.json(err);
+        else {
+          if(data && data.identityList){
+            var responseData = {};
+            responseData.data = data.identityList;
+            responseData.statusCode = 200;
+            responseData.statusMessage = "OK";
+            return res.json(responseData);
+          }
+          else
+          {
+            return res.json({statusCode: 402, statusMessage: "Please update basic profile first...!!!"});
+          }
+        }
+      })
+    }
+    else
+    {
+      res.json({statusCode: 402, statusMessage: "Something bad happened...!!!"});
+    }
+  }
+  catch(err){
+    res.json(err)
+  }
+});
+routes.post('/update-user-bgc-identity-details', function(req,res){
+  try{
+    var clientData = req.body;
+    console.log(clientData);
+    JSONValidatorService.jsonValidationWithSchema(req, res, jsonSchema.emp_user.updateIdentityDetails, clientData.identityList, function (err, data) {
+      if(data){
+        Bgc.findByIdAndUpdate({_id: clientData.bgcId},
+            {
+              identityList : clientData.identityList
+            }, function (err, data) {
+              if (err) return res.json(err);
+              else {
+                return res.json({statusCode: 200, statusMessage: "updated successfully."});
+              }
+            })
+      }
+      else
+      {
+        res.json({err: err});
+      }
+    });
+  }
+  catch(err){
+    res.json(err)
+  }
+});
+routes.post('/get-user-bgc-education-document-details', function(req,res){
+  try{
+    var clientData = req.body;
+    console.log(clientData);
+    if(clientData.bgcId){
+      Bgc.findOne({_id: clientData.bgcId}, function (err, data) {
+        if (err) return res.json(err);
+        else {
+          if(data && data.educationQualificationDocumentList){
+            var responseData = {};
+            responseData.data = data.educationQualificationDocumentList;
+            responseData.statusCode = 200;
+            responseData.statusMessage = "OK";
+            return res.json(responseData);
+          }
+          else
+          {
+            return res.json({statusCode: 402, statusMessage: "Please update basic profile first...!!!"});
+          }
+        }
+      })
+    }
+    else
+    {
+      res.json({statusCode: 402, statusMessage: "Something bad happened...!!!"});
+    }
+  }
+  catch(err){
+    res.json(err)
+  }
+});
 
 
 

@@ -44,16 +44,6 @@ app.use(bodyParser.json({limit: '50mb'}));
 app.use(express.static('public'));   // set the static files location
 
 
-//app.use(passport.initialize());
-//app.use(passport.session());
-//app.use(cookieParser());
-//app.use(session({secret:'secret',proxy: true, resave: true, saveUninitialized: true,cookie: {secure: false}}));
-
-
-//setting up passport strategy
-
-//app.use(session({secret: 'secret', proxy: true, resave: true, saveUninitialized: true, cookie: {secure: false}}));
-
 //mounting other routes
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
@@ -74,20 +64,16 @@ app.use(function(req, res, next) {
     res.status(404).send('<html><head><title>404 Page Not found</title></head><body style="padding: 50px; font-size: 30px; background-color: lightgray"><h3 style="padding: 15px; background-color: #00627e; color: red"> 404 Page Not found...!!!</h3></body> </html>');
 });
 
-//app.use('/payment', paymentRoutes);
-//app.use('/cms', cmsRoutes);
-
-//app.use('/auth',authRoutes);
 
 //local server or network hosted server
 
 if (serverConfig.mode === "l") {
     app.listen(serverConfig.port, function () {
-        console.log("Server at " + serverConfig.domain + ":" + serverConfig.port);
+        console.log("RST Panel Server is Running....!!! at >> " + serverConfig.domain + ":" + serverConfig.port);
     });
 }
 else {
     app.listen(serverConfig.port, '0.0.0.0', function () {
-        console.log("Server at " + serverConfig.domain + ":" + serverConfig.port);
+        console.log("RST Panel Server is Running....!!! at >> " + serverConfig.domain + ":" + serverConfig.port);
     });
 }

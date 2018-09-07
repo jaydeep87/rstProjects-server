@@ -33,7 +33,7 @@ module.exports = {
       "type": "object",
       "properties": {
         "fName": {"type": "string", "minLength": 2, "maxLength": 30},
-        "mName": {"type": "string", "minLength": 2, "maxLength": 30},
+        "mName": {"type": "string", "maxLength": 30},
         "lName": {"type": "string", "minLength": 2, "maxLength": 30},
         "fatherName": {"type": "string", "minLength": 2, "maxLength": 50},
         "mobile": {"type": "string", "minLength": 10, "maxLength": 10},
@@ -112,26 +112,60 @@ module.exports = {
       }]
     },
     "updateEmploymentDetails": {
+      "type": "object",
+      "properties": {
+        "employmentList": {"type": "array",
+          "items": [{
+            "type": "object",
+            "properties": {
+              "companyName":{"type": "string", "minLength": 3, "maxLength": 150},
+              "companyAddressWithPin":{"type": "string", "minLength": 7, "maxLength": 300},
+              "remuneration":{"type": "string", "minLength": 3, "maxLength": 9},
+              "designation":{"type": "string", "minLength": 3, "maxLength": 100},
+              "employeeId":{"type": "string", "minLength": 3, "maxLength": 50},
+              "reasonForLeaving":{"type": "string", "minLength": 3, "maxLength": 150},
+              "fromDate":{"type": "string", "minLength": 8, "maxLength": 10},
+              "toDate":{"type": "string", "minLength": 8, "maxLength": 10},
+              "hrName":{"type": "string", "minLength": 3, "maxLength": 150},
+              "hrContact":{"type": "string", "maxLength": 30},
+              "hrEmail":{"type": "string", "maxLength": 150},
+              "supervisorName":{"type": "string", "maxLength": 50},
+              "supervisorContact":{"type": "string", "maxLength": 30},
+              "supervisorEmail":{"type": "string", "maxLength": 150}
+            }
+          }]
+        },
+        "canVerifyIn15Days": {"type": "string"},
+        "dateForVerification": {"type": "string", "minLength": 8, "maxLength": 10},
+        "isExperienced": {"type": "boolean"}
+      },
+      "required": ["employmentList", "canVerifyIn15Days", "dateForVerification", "isExperienced"]
+
+    },
+    "updateReferenceDetails": {
       "type": "array",
       "items": [{
         "type": "object",
         "properties": {
-          "companyName":{"type": "string", "minLength": 3, "maxLength": 150},
-          "companyAddressWithPin":{"type": "string", "minLength": 7, "maxLength": 300},
-          "remuneration":{"type": "string", "minLength": 3, "maxLength": 9},
-          "designation":{"type": "string", "minLength": 3, "maxLength": 100},
-          "employeeId":{"type": "string", "minLength": 3, "maxLength": 50},
-          "reasonForLeaving":{"type": "string", "minLength": 3, "maxLength": 150},
-          "fromDate":{"type": "string", "minLength": 8, "maxLength": 10},
-          "toDate":{"type": "string", "minLength": 8, "maxLength": 10},
-          "hrName":{"type": "string", "minLength": 3, "maxLength": 150},
-          "hrContact":{"type": "string", "maxLength": 30},
-          "hrEmail":{"type": "string", "maxLength": 150},
-          "supervisorName":{"type": "string", "maxLength": 50},
-          "supervisorContact":{"type": "string", "maxLength": 30},
-          "supervisorEmail":{"type": "string", "maxLength": 150}
+          "name": {"type": "string", "minLength": 3, "maxLength": 150},
+          "contact": {"type": "string", "minLength": 10, "maxLength": 20},
+          "email": {"type": "string", "minLength": 7, "maxLength": 100}
         },
-        "required": ["companyName", "companyAddressWithPin", "remuneration", "employeeId", "reasonForLeaving", "fromDate","toDate","hrName","hrEmail","supervisorName","supervisorContact","supervisorEmail"]
+        "required": ["name", "contact"]
+      }]
+    },
+    "updateIdentityDetails": {
+      "type": "array",
+      "items": [{
+        "type": "object",
+        "properties": {
+          "type": {"type": "string", "minLength": 3, "maxLength": 100},
+          "number": {"type": "string", "minLength": 3, "maxLength": 30},
+          "dateOfIssue": {"type": "string", "minLength": 8, "maxLength": 10},
+          "dateOfExpiry": {"type": "string", "minLength": 8, "maxLength": 10},
+          "placeOfIssue": {"type": "string", "minLength": 3, "maxLength": 100}
+        },
+        "required": ["type", "number","dateOfIssue","dateOfExpiry","placeOfIssue"]
       }]
     },
 

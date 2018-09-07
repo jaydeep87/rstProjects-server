@@ -7,6 +7,7 @@ const bcrypt = require('bcrypt');
 const serverConfig = require('../config/server');
 var rstTokenAuthentication = require('../services/authTokenService.js');
 const jwt = require('jsonwebtoken');
+const uuidv1 = require('uuid');
 
 module.exports = {
   /******************************************
@@ -137,23 +138,73 @@ module.exports = {
       console.log(_id);
       var thumbURL = imageDetails.destination.split('public')[1] + '/' + imageDetails.filename;
       console.log(thumbURL);
-      Bgc.findOne({_id: _id},function (err, userDataObj) {
+      Bgc.findOneAndUpdate({_id:_id}, {profileImage: thumbURL},function (err, updateUserDataObj) {
         if (err) return callback(err);
+        else {
+          console.log(updateUserDataObj);
+          return callback(null, {statusCode:200,data:updateUserDataObj, serverBaseURL: serverConfig.serverBaseURLForClient, statusMessage:"Uploaded successfully"})
+        }
+      })
+    }
+    catch(err){
+      callback(err, null);
+    }
+  },
+
+  /******************************************
+   * functionName:uploadEducationalDocuments
+   * input:
+   * output: JSON
+   * owner:
+   * date:13/08/2018
+   ********************************************/
+  uploadEducationalDocuments: function (clientData, imageDetails, callback) {
+    try {
+      console.log(clientData._id);
+      var fileURL = imageDetails.destination.split('public')[1] + '/' + imageDetails.filename;
+      var documentDataObj = {};
+      documentDataObj.uuid = uuidv1();
+      documentDataObj.fileURL = fileURL;
+      documentDataObj.name = clientData.name;
+
+      console.log(documentDataObj);
+      var educationList = [];
+      Bgc.findOne({_id: clientData._id},function (err, userDataObj) {
+        if (err) return callback(err);
+        if(userDataObj && userDataObj.educationQualificationDocumentList.length)
+        {
+          educationList = userDataObj.educationQualificationDocumentList;
+          educationList.push(documentDataObj.fileURL);
+          Bgc.findOneAndUpdate({_id:clientData._id}, {educationQualificationDocumentList: educationList},function (err, updatedData) {
+            if (err) return callback(err);
+            else {
+              console.log(updatedData);
+              return callback(null, {statusCode:200, data:updatedData, serverBaseURL: serverConfig.serverBaseURLForClient, statusMessage:"Uploaded successfully"})
+            }
+          })
+        }
+        else
+        {
+          educationList = [];
+          educationList.push(documentDataObj.fileURL);
+          Bgc.findOneAndUpdate({_id:clientData._id}, {educationQualificationDocumentList: educationList},function (err, updateUserDataObj) {
+            if (err) return callback(err);
+            else {
+              console.log(updateUserDataObj);
+              return callback(null, {statusCode:200, data:updateUserDataObj, serverBaseURL: serverConfig.serverBaseURLForClient, statusMessage:"Uploaded successfully"})
+            }
+          })
+        }
         //if (cityObj) {
         //  if(cityObj.cityImage) fse.removeSync('./public/images/uploads/city/' + cityObj.cityImage);
         //}
-        Bgc.findOneAndUpdate({_id:_id}, {profileImage: thumbURL},function (err, updateUserDataObj) {
-          if (err) return callback(err);
-          else {
-            console.log(updateUserDataObj);
-            return callback(null, {statusCode:200,data:updateUserDataObj, serverBaseURL: serverConfig.serverBaseURLForClient, statusMessage:"Uploaded successfully"})
-          }
-        })
+
       })
     }
     catch(err){
       callback(err, null);
     }
   }
+
 
 };

@@ -20,6 +20,7 @@ const bgcSchema = mongoose.Schema({
   marital : {type: String, default: "single"},
   nationality : {type: String, default: "indian"},
   directContact : {type: String, default: ""},
+  aadhaarNo : {type: String, default: ""},
   profileImage: {type: String, default: ""},
 
   contactAddress :{type:mongoose.Schema.Types.Mixed, default:{
@@ -55,24 +56,19 @@ const bgcSchema = mongoose.Schema({
   educationQualification : [],
 
   employmentList : [],
-  canVerifyIn15Days : {type:Boolean, default:false},
+  canVerifyIn15Days : {type:String, default: "yes"},
   dateForVerification :  {type: String, default: ""},
   isExperienced:{type:Boolean, default:false},
 
   referenceList : [],
-  isPassport : {type:Boolean, default:false},
-  isDrivingLicense : {type:Boolean, default:false},
-  passportNo : {type: String, default: ""},
-  aadhaarNo : {type: String, default: ""},
-  drivingLicenseNo : {type: String, default: ""},
-  dateOfIssuePassport : { type: Date, default: null },
-  dateOfIssueDrivingLicense : { type: Date, default: null },
-  dateOfExpiryPassport : { type: Date, default: null },
-  dateOfExpiryDrivingLicense : { type: Date, default: null },
-  contactAddressDocumentList : [String],
+
+  identityList : [],
+
   educationQualificationDocumentList : [String],
-  employmentDocumentList : [String],
-  identityDocumentList : [String],
+  employmentDocumentList : [],
+  identityDocumentList : [],
+  otherDocumentList : [],
+
   createdAt:{type: Date, default: Date.now},
   updatedAt:{type: Date, default: Date.now}
 
