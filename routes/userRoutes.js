@@ -138,7 +138,7 @@ routes.post('/upload-user-profile-image/:authToken/:_id', upload.single('profile
   }
 
 });
-routes.post('/upload-user-education-document', upload.single('educational_document'), function(req, res){
+routes.post('/upload-user-educational-document', upload.single('educational_document'), function(req, res){
   try{
     var clientData = req.body;
     console.log(clientData._id);
@@ -630,6 +630,7 @@ routes.post('/get-user-bgc-education-document-details', function(req,res){
           if(data && data.educationQualificationDocumentList){
             var responseData = {};
             responseData.data = data.educationQualificationDocumentList;
+            responseData.serverBaseURL = serverConfig.serverBaseURLForClient;
             responseData.statusCode = 200;
             responseData.statusMessage = "OK";
             return res.json(responseData);

@@ -174,7 +174,7 @@ module.exports = {
         if(userDataObj && userDataObj.educationQualificationDocumentList.length)
         {
           educationList = userDataObj.educationQualificationDocumentList;
-          educationList.push(documentDataObj.fileURL);
+          educationList.push(documentDataObj);
           Bgc.findOneAndUpdate({_id:clientData._id}, {educationQualificationDocumentList: educationList},function (err, updatedData) {
             if (err) return callback(err);
             else {
@@ -186,7 +186,7 @@ module.exports = {
         else
         {
           educationList = [];
-          educationList.push(documentDataObj.fileURL);
+          educationList.push(documentDataObj);
           Bgc.findOneAndUpdate({_id:clientData._id}, {educationQualificationDocumentList: educationList},function (err, updateUserDataObj) {
             if (err) return callback(err);
             else {

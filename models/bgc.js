@@ -64,7 +64,7 @@ const bgcSchema = mongoose.Schema({
 
   identityList : [],
 
-  educationQualificationDocumentList : [String],
+  educationQualificationDocumentList : [],
   employmentDocumentList : [],
   identityDocumentList : [],
   otherDocumentList : [],
