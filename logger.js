@@ -1,4 +1,4 @@
-//global.logger = require('./api/utils/logger')('cmtapi_' + new Date().getDate() + '_' + (new Date().getMonth() + 1) + '.log');
+//global.logger = require('./api/utils/logger')('testapi' + new Date().getDate() + '_' + (new Date().getMonth() + 1) + '.log');
 //usage example :
 //doConnection(process.env.DB_CON, function (status) {
 //  logger.info(status);
